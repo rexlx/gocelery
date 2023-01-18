@@ -120,6 +120,57 @@ type TaskMessage struct {
 	Expires *time.Time             `json:"expires"`
 }
 
+// REX->
+type MessageV2 struct {
+	ID         string
+	Task       string
+	Properties *TaskMessageProperties
+	Headers    *TaskMessageHeader
+	Body       *TaskMessageBody
+}
+type TaskMessageHeader struct {
+	ArgsRepr     string    `json:"argsrepr"`
+	KwargsRepr   string    `json:"kwargsrepr"`
+	Eta          time.Time `json:"eta"`
+	Expires      time.Time `json:"expires"`
+	Group        string    `json:"group_index"`
+	GroupIndex   string    `json:"group"`
+	Id           string    `json:"id"`
+	ParentId     string    `json:"parent_id"`
+	RootId       string    `json:"root_id"`
+	Retries      int       `json:"retries"`
+	IgnoreResult bool      `json:"ignore_result"`
+	Lang         string    `json:"lang"`
+	Origin       string    `json:"origin"`
+	Shadow       string    `json:"shadow"`
+	Task         string    `json:"task"`
+	TimeLimit    []int     `json:"timelimit"`
+}
+
+type TaskMessageBody struct {
+	Args   []interface{}
+	Kwargs map[string]interface{}
+	Embed  map[string]interface{}
+}
+
+type TaskMessageProperties struct {
+	CorrelationID   string          `json:"correlation_id"`
+	ContentType     string          `json:"content_type"`
+	ContentEncoding string          `json:"content_encoding"`
+	ReplyTo         string          `json:"reply_to"`
+	DeliveryTag     string          `json:"delivery_tag"`
+	DeliveryMode    int             `json:"delivery_mode"`
+	DeliveryDetails DeliveryDetails `json:"delivery_details"`
+}
+
+type DeliveryDetails struct {
+	Priority   int    `json:"priority"`
+	RoutingKey string `json:"routing_key"`
+	Exchange   string `json:"exchange"`
+}
+
+// <-REX
+
 func (tm *TaskMessage) reset() {
 	tm.ID = uuid.Must(uuid.NewV4()).String()
 	tm.Task = ""
